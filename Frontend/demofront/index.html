@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>demo</title>
+    <!-- 引入 Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- 引入 Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.1/js.cookie.min.js"></script>
+    <link rel="stylesheet" href="css/index.css">
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+
+</head>
+<body>
+    <div id="app" v-cloak>
+        <!-- 登錄介面，未登入時才能看到 -->
+        <div v-if="!isLoggedIn">
+            <h1>Login</h1>
+            <input type="text" v-model="loginCredentials.username" placeholder="Username">
+            <input type="password" v-model="loginCredentials.password" placeholder="Password">
+            <button @click="login">Login</button>
+            <p v-if="loginError">{{ loginErrorMessage }}</p>
+        </div>
+
+        <!-- 投票部分，未登入時僅能看 -->
+        <div>
+            <div>
+                <h1>投票清單</h1>
+                <table>
+                    <thead>
+                        <tr>
+                            <th v-if="isLoggedIn">投票</th>
+                            <th>投票項目</th>
+                            <th class="count-column">累計票數</th>
+                            <th v-if="userPermission == 1">操作</th> <!-- 管理者才能看到 -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(item, index) in options" :key="item.voteID" v-if="item.voteStatus === 1">
+                            <td  v-if="isLoggedIn">
+                                <input type="checkbox" :value="item.voteID" v-model="selectedOptions">
+                            </td>
+                            <td>
+                                
+                                {{ item.VoteName }}
+                            </td>
+                            <td class="count-column">
+                                {{ item.voteCount }}
+                            </td>
+                            <!-- 管理者才能看到 -->
+                            <td v-if="userPermission == 1">
+                                <button @click="deleteVoteItem(item.voteID)" class="vote-button">删除</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <input type="text" v-model="newVoteName" placeholder="New Vote Name" v-if="userPermission == 1">
+                <button @click="addNewVoteItem" v-if="userPermission == 1">新增投票項目</button>
+                <button v-if="isLoggedIn" @click="submitOptions" class="submit-button">提交</button>
+                <button v-if="isLoggedIn" @click="logout" class="logout-button">登出</button>
+                <p v-if="voteMessage">{{ voteMessage }}</p>
+            </div>
+        </div>
+    </div>
+    <script src = "js\index.js" > </script>
+</body>
+</html>

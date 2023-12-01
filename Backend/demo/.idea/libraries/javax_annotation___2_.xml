@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="javax.annotation  (2)">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/javax.annotation.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,0 +1,148 @@
+/* 整體布局與字體 */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Arial', sans-serif;
+    background: #f4f4f4; /* 背景色 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 設定主體的樣式 */
+#app {
+    width: 50vw; /* 設定寬度為視窗的50% */
+    max-width: 400px; /* 限制最大寬度 */
+    margin: 20px;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    border-radius: 5px;
+    box-sizing: border-box; /* 包括padding在内的寬度*/
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 居中對齊 */
+}
+
+h1 {
+    text-align: center; /* 平居中對齊標題 */
+}
+
+table {
+    width: 100%; /* 表格寬度佔滿當前容器 */
+    margin: 0 auto; /* 表格居中 */
+    border-collapse: collapse; 
+    border: 1px solid #ddd;
+}
+
+th,td {
+    text-align: center;
+    padding: 8px;
+    border: 1px solid #ddd;
+    background-color: #fff; 
+    
+}
+
+th {
+    background-color: #f4f4f4; 
+    border-top: 1px solid #ddd; 
+}
+
+thead th {
+    background-color: #f4f4f4; /* 表頭的背景顏色 */
+}
+
+/* 表格邊框*/
+tbody td {
+    border-bottom: 1px solid #ddd; 
+}
+
+/* 數字列樣式 */
+td.count-column {
+    text-align: center; /* 居中 */
+}
+
+.submit-button,
+.logout-button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 15px;
+}
+
+/* 若螢幕太小，則限制在800px*/
+@media (max-width: 800px) {
+    #app {
+        width: 90%; /* 不要觸碰到邊界 */
+        margin: 20px auto; /* 垂直居中 */
+    }
+}
+
+/* 表單與按鈕樣式 */
+input[type="text"],
+input[type="password"],
+
+button {
+    width: calc(100% - 20px); /* 產生額外空間不要讓button太密 */
+    padding: 10px;
+    margin: 10px 0; /* 增加垂直間距 */
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box; 
+}
+
+.vote-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; 
+    margin-bottom: 15px; /* 投票項目間的距離 */
+}
+
+
+.vote-item input[type="checkbox"] {
+    margin-right: 5px; 
+}
+
+
+.vote-item label {
+    flex: 1; 
+    margin-left: 5px; 
+}
+
+/* 設定投票按鈕的樣式 */
+.vote-button,
+button {
+    padding: 8px 16px; /* 增加內邊距 */
+    margin-left: auto; 
+    margin-top: 5px; 
+    width: auto;
+    background-color: #5cacf9;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    white-space: nowrap; 
+    
+}
+
+.vote-button:hover,
+button:hover {
+    background-color: #4a94d4;
+}
+
+
+p {
+    color: red;
+    font-size: 0.9em;
+}
+
+
+#app > div > button {
+    width: auto; 
+    margin-top: 20px; 
+}
+
+
+#app > div:last-child {
+    text-align: center; 
+}
