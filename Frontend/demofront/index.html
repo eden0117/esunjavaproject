@@ -25,7 +25,6 @@
             <button @click="login">Login</button>
             <p v-if="loginError">{{ loginErrorMessage }}</p>
         </div>
-
         <!-- 投票部分，未登入時僅能看 -->
         <div>
             <div>
@@ -45,7 +44,6 @@
                                 <input type="checkbox" :value="item.voteID" v-model="selectedOptions">
                             </td>
                             <td>
-                                
                                 {{ item.VoteName }}
                             </td>
                             <td class="count-column">
