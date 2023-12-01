@@ -25,7 +25,7 @@
             <button @click="login">Login</button>
             <p v-if="loginError">{{ loginErrorMessage }}</p>
         </div>
-        <!-- 投票部分，未登入時僅能看 -->
+        <!-- 投票部分，未登入時僅能看，不能投票 -->
         <div>
             <div>
                 <h1>投票清單</h1>
@@ -56,6 +56,7 @@
                         </tr>
                     </tbody>
                 </table>
+                <!-- 管理者才能看到且新增 -->
                 <input type="text" v-model="newVoteName" placeholder="New Vote Name" v-if="userPermission == 1">
                 <button @click="addNewVoteItem" v-if="userPermission == 1">新增投票項目</button>
                 <button v-if="isLoggedIn" @click="submitOptions" class="submit-button">提交</button>
