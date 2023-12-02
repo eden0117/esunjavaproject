@@ -8,22 +8,32 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.1/js.cookie.min.js"></script>
     <link rel="stylesheet" href="css/index.css">
+    <link href="/favicon.ico" type="image/x-icon" rel="icon" />
     <style>
         [v-cloak] {
             display: none;
         }
     </style>
-
 </head>
 <body>
     <div id="app" v-cloak>
         <!-- 登錄介面，未登入時才能看到 -->
-        <div v-if="!isLoggedIn">
+        <div v-if="!isLoggedIn && !isRegistering">
             <h1>Login</h1>
             <input type="text" v-model="loginCredentials.username" placeholder="Username">
             <input type="password" v-model="loginCredentials.password" placeholder="Password">
             <button @click="login">Login</button>
+            <button @click="toggleRegistering">註冊</button>
             <p v-if="loginError">{{ loginErrorMessage }}</p>
+        </div>
+        <!-- 註冊介面 -->
+        <div v-if="isRegistering">
+            <h1>Register</h1>
+            <input type="text" v-model="registerCredentials.username" placeholder="Username">
+            <input type="password" v-model="registerCredentials.password" placeholder="Password">
+            <button @click="register">註冊</button>
+            <button @click="toggleRegistering">返回登入</button>
+            <p v-if="registerError">{{ registerErrorMessage }}</p>
         </div>
         <!-- 投票部分，未登入時僅能看，不能投票 -->
         <div>
@@ -65,6 +75,6 @@
             </div>
         </div>
     </div>
-    <script src = "js\index.js" > </script>
+    <script src="js/index.js"></script>
 </body>
 </html>

@@ -4,7 +4,11 @@ var app = new Vue({
         isLoggedIn: false,
         currentUserID: null,
         userPermission: null,
-        loginCredentials: { username: "", password: "" },
+        loginCredentials: { username: '', password: '' },
+        isRegistering: false,
+        registerCredentials: { username: '', password: '' },
+        registerError: false,
+        registerErrorMessage: '',
         options: [],
         selectedOptions: [],
         newVoteName: "",
@@ -27,14 +31,17 @@ var app = new Vue({
     methods: {
         //輸入方法驗證
         validateInput(input) {
-            const regex = /^[a-zA-Z0-9]*$/;
+            const regex = /^[a-zA-Z0-9]{1,45}$/;
             return regex.test(input);
         },
         //實作登入功能
         login() { 
             if (!this.validateInput(this.loginCredentials.username) || !this.validateInput(this.loginCredentials.password)) {
                 this.loginError = true;
-                this.loginErrorMessage = '輸入內容必須只包含英文字母和數字';
+                this.loginErrorMessage = '輸入內容必須只包含英文字母和數字及長度需小於45個字元';
+                // 清空輸入框內容
+                this.registerCredentials.username = '';
+                this.registerCredentials.password = '';
                 return;
             }
             this.loginError = false;
@@ -52,13 +59,13 @@ var app = new Vue({
                         
                     } else {
                         this.loginError = true;
-                        this.loginErrorMessage = response.data.data || 'Login failed';
+                        this.loginErrorMessage = response.response.data.data || 'Login failed';
                     }
                 })
                 .catch(error => {
                     this.loginError = true;
                     this.loginErrorMessage = 'Login error';
-                    console.error('Login error:', error);
+                    console.error('Login error:', error.response.data.Message);
                 });
         },
         //實作登出功能
@@ -68,11 +75,11 @@ var app = new Vue({
                     if (response.data.StatusCode === "200") {
                         console.log('登出成功');
                     } else {
-                        console.error('登出失敗:', response.data.data);
+                        console.error('登出失敗:', response.response.data.Message);
                     }
                 })
                 .catch(error => {
-                    console.error('登出錯誤:', error);
+                    console.error('登出錯誤:', error.response.data.Message);
                 });
 
                 // 清除cookie
@@ -85,6 +92,34 @@ var app = new Vue({
                 this.userPermission = null;
                 this.voteMessage = '';
         },
+        toggleRegistering() {
+            this.isRegistering = !this.isRegistering;
+        },
+        register() {
+            if (!this.validateInput(this.registerCredentials.username) || !this.validateInput(this.registerCredentials.password)) {
+                this.registerError = true;
+                this.registerErrorMessage = '輸入內容必須只包含英文字母和數字及長度需小於45個字元';
+                // 清空輸入框內容
+                this.registerCredentials.username = '';
+                this.registerCredentials.password = '';
+                return;
+            }
+            axios.post('http://127.0.0.1:8080/Signup', this.registerCredentials)
+                .then(response => {
+                    // 註冊成功後的處理，例如提示註冊成功，或是自動登入用戶
+                    alert(response.data.Message);
+                    this.isRegistering = false;  // 切換回登入介面
+                })
+                .catch(error => {
+                    // 註冊失敗後的處理，例如顯示錯誤信息
+                    this.registerError = true;
+                    this.registerErrorMessage = error.response.data.Message;
+                    console.error("註冊失敗", error);
+                    // 清空輸入框內容
+                    this.registerCredentials.username = '';
+                    this.registerCredentials.password = '';
+                });
+        },
         //實作刪除功能
         deleteVoteItem(voteID) {
             axios.post('http://127.0.0.1:8080/deletevote', { voteid : voteID })
@@ -94,11 +129,11 @@ var app = new Vue({
                         // 從表單中移除該項目
                         this.options = this.options.filter(item => item.voteID !== voteID);
                     } else {
-                        console.error('刪除失敗:', response.data.message);
+                        console.error('刪除失敗:', response.response.data.Message);
                     }
                 })
                 .catch(error => {
-                    console.error('刪除錯誤:', error);
+                    console.error('刪除錯誤:', error.response.data.Message);
                 });
         },
         //實作提交投票項目功能
@@ -116,7 +151,7 @@ var app = new Vue({
                 })
                 .catch(error => {
                     this.voteMessage = '投票失敗';
-                    console.error('Error submitting the votes:', error);
+                    console.error('Error submitting the votes:', error.response.data.Message);
                 });
         },
         // 獲得所有投票項目
@@ -130,17 +165,19 @@ var app = new Vue({
                 }
             })
             .catch(error => {
-                console.error('Error fetching the options:', error);
+                console.error('Error fetching the options:', error.response.data.Message);
             });
         },
         addNewVoteItem() {
             // 檢查是否有填入投票項目名稱
             if (!this.validateInput(this.newVoteName)) {
-                alert("投票項目名稱必須只包含英文字母和數字");
+                alert("投票項目名稱必須只包含英文字母和數字且字母長度小於45個字元");
+                location.reload();
                 return;
             }
             if (!this.newVoteName) {
                 alert("請輸入欲建立的新投票項目名稱");
+                location.reload();
                 return;
             }
     
@@ -162,11 +199,11 @@ var app = new Vue({
                         location.reload();
 
                     } else {
-                        console.error('添加失敗:', response.data.message);
+                        console.error('添加失敗:', response.response.data.Message);
                     }
                 })
                 .catch(error => {
-                    console.error('添加錯誤:', error);
+                    console.error('添加錯誤:', error.response.data.Message);
                 });
         },
     }

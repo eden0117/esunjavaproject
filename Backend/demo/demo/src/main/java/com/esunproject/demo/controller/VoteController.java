@@ -83,7 +83,7 @@ public class VoteController {
             }
         } catch (SQLException | ClassNotFoundException e) {
             //建立response
-            response.put("StatusCode", "400");
+            response.put("StatusCode", "500");
             response.put("Message", "Database error: " + e.getMessage());
             return ResponseEntity.badRequest().body(response.toString());
         }
@@ -122,7 +122,7 @@ public class VoteController {
             }
         } catch (SQLException | ClassNotFoundException e) {
             //建立response
-            response.put("StatusCode", "400");
+            response.put("StatusCode", "500");
             response.put("Message", "Database error: " + e.getMessage());
             return ResponseEntity.badRequest().body(response.toString());
         }
@@ -161,13 +161,13 @@ public class VoteController {
                 }
                 else{
                     //建立response
-                    response.put("StatusCode", "200");
+                    response.put("StatusCode", "400");
                     response.put("Message", "Vote unsuccessful");
                     return ResponseEntity.badRequest().body(response.toString());
                 }
             } catch (SQLException e) {
                 //建立response
-                response.put("StatusCode", "400");
+                response.put("StatusCode", "500");
                 response.put("Message", "Database error: " + e.getMessage());
                 return ResponseEntity.badRequest().body(response.toString());
             }

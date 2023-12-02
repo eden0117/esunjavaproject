@@ -60,14 +60,14 @@ public class VoterController {
                     //建立response
                     response.put("StatusCode", "400");
                     response.put("Message", "Login Unsuccessfuly");
-                    return ResponseEntity.badRequest().body(response);
+                    return ResponseEntity.badRequest().body(response.toString());
                 }
             }
         } catch (SQLException | ClassNotFoundException e) {
             //建立response
-            response.put("StatusCode", "400");
+            response.put("StatusCode", "500");
             response.put("Message", "Database error: " + e.getMessage());
-            return ResponseEntity.badRequest().body(response);
+            return ResponseEntity.badRequest().body(response.toString());
         }
 
     }
@@ -101,15 +101,63 @@ public class VoterController {
                     //建立response
                     response.put("StatusCode", "400");
                     response.put("Message", "Logout Unsuccessfuly");
-                    return ResponseEntity.badRequest().body(response);
+                    return ResponseEntity.badRequest().body(response.toString());
                 }
             }
         } catch (SQLException | ClassNotFoundException e) {
             //建立response
-            response.put("StatusCode", "400");
+            response.put("StatusCode", "500");
             response.put("Message", "Database error: " + e.getMessage());
-            return ResponseEntity.badRequest().body(response);
+            return ResponseEntity.badRequest().body(response.toString());
         }
 
     }
+    //實作註冊功能
+    @PostMapping("/Signup")
+    public ResponseEntity<?> Signup(@RequestBody String jsoninfo) throws JSONException {
+        System.out.println(jsoninfo);
+        JsonElement jsonElement = JsonParser.parseString(jsoninfo);
+        JsonObject jsonObject = jsonElement.getAsJsonObject();
+        //存放給前端的內容
+        JSONObject response = new JSONObject();
+        //取得內容
+        String username = jsonObject.get("username").getAsString();
+        String password = jsonObject.get("password").getAsString();
+        //初始化資料庫連線，try ...with在結束時會自動關閉資源，不用close db 連線
+        try (Connection conn = DBMgr.getConnection()) {
+            //定義等一下要執行的sp名稱
+            String sql = "{CALL CreateUser(?,?,?)}";
+            //準備執行指定sp
+            try (CallableStatement stmt = conn.prepareCall(sql)) {
+                //填入variable
+                stmt.setString(1, username);
+                stmt.setString(2, password);
+                stmt.registerOutParameter(3, Types.INTEGER);  // 註冊輸出參數
+                //實際執行 (db開啟autocommit 不用再commit一次)
+                stmt.executeUpdate();
+                int result = stmt.getInt(3);
+                System.out.println(result);
+                //若成功更新(僅會更新一個使用者的狀態，少於或多於皆會失敗)
+                if (result == 1) {
+                    //建立response
+                    response.put("StatusCode", "200");
+                    response.put("Message", "Signup Successfuly");
+                    return ResponseEntity.ok().body(response.toString());
+                }else{
+                    //建立response
+                    response.put("StatusCode", "400");
+                    response.put("Message", "User Exist!!");
+                    return ResponseEntity.badRequest().body(response.toString());
+                }
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            //建立response
+            response.put("StatusCode", "500");
+            response.put("Message", "Database error: " + e.getMessage());
+            System.out.println(response);
+            return ResponseEntity.badRequest().body(response.toString());
+        }
+
+    }
+
 }
