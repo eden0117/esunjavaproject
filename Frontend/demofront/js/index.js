@@ -49,7 +49,7 @@ var app = new Vue({
                 .then(response => {
                     if ( response.data.StatusCode === "200") {
                         this.isLoggedIn = true;
-                        console.log("目前user :"+ response.data.data.voterPermission)
+                        //console.log("目前user :"+ response.data.data.voterPermission)
                         this.currentUserID = response.data.data.voterID;
                         this.userPermission = response.data.data.voterPermission;
                         // 保存到cookie
@@ -65,18 +65,14 @@ var app = new Vue({
                 .catch(error => {
                     this.loginError = true;
                     this.loginErrorMessage = 'Login error';
-                    console.error('Login error:', error.response.data.Message);
+                    //console.error('Login error:', error.response.data.Message);
                 });
         },
         //實作登出功能
         logout() {
             axios.post('http://127.0.0.1:8080/Logout', { userid: this.currentUserID })
                 .then(response => {
-                    if (response.data.StatusCode === "200") {
-                        console.log('登出成功');
-                    } else {
-                        console.error('登出失敗:', response.response.data.Message);
-                    }
+                        alert('登出成功');
                 })
                 .catch(error => {
                     console.error('登出錯誤:', error.response.data.Message);
@@ -114,7 +110,7 @@ var app = new Vue({
                     // 註冊失敗後的處理，例如顯示錯誤信息
                     this.registerError = true;
                     this.registerErrorMessage = error.response.data.Message;
-                    console.error("註冊失敗", error);
+                    //console.error("註冊失敗", error);
                     // 清空輸入框內容
                     this.registerCredentials.username = '';
                     this.registerCredentials.password = '';
@@ -125,15 +121,18 @@ var app = new Vue({
             axios.post('http://127.0.0.1:8080/deletevote', { voteid : voteID })
                 .then(response => {
                     if (response.data.StatusCode === "200") {
-                        console.log('刪除成功');
+                        //console.log('刪除成功');
+                        alert('刪除成功');
                         // 從表單中移除該項目
                         this.options = this.options.filter(item => item.voteID !== voteID);
                     } else {
-                        console.error('刪除失敗:', response.response.data.Message);
+                        //console.error('刪除失敗:', response.response.data.Message);
+                        alert('刪除成功');
                     }
                 })
                 .catch(error => {
-                    console.error('刪除錯誤:', error.response.data.Message);
+                    alert('刪除成功');
+                    //console.error('刪除錯誤:', error.response.data.Message);
                 });
         },
         //實作提交投票項目功能
@@ -151,7 +150,7 @@ var app = new Vue({
                 })
                 .catch(error => {
                     this.voteMessage = '投票失敗';
-                    console.error('Error submitting the votes:', error.response.data.Message);
+                    //console.error('Error submitting the votes:', error.response.data.Message);
                 });
         },
         // 獲得所有投票項目
@@ -161,11 +160,12 @@ var app = new Vue({
                 if (response.data && response.data.StatusCode === "200") {
                     this.options = response.data.data;
                 } else {
-                    console.error('Error fetching the options: Invalid response');
+                    //console.error('更新投票項目失敗');
+                    alert('更新投票項目失敗');
                 }
             })
             .catch(error => {
-                console.error('Error fetching the options:', error.response.data.Message);
+                console.error('更新投票項目失敗 :', error.response.data.Message);
             });
         },
         addNewVoteItem() {
@@ -194,12 +194,14 @@ var app = new Vue({
                         this.options.push(response.data.data);
                         // 清空輸入框
                         this.newVoteName = ""; 
-                        console.log('添加成功');
+                        //console.log('添加成功');
+                        alert('添加成功');
                         // 投票成功後刷新
                         location.reload();
 
                     } else {
                         console.error('添加失敗:', response.response.data.Message);
+                        alert('添加失敗');
                     }
                 })
                 .catch(error => {

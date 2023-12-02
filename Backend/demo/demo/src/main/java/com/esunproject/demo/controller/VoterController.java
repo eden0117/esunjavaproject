@@ -115,7 +115,6 @@ public class VoterController {
     //實作註冊功能
     @PostMapping("/Signup")
     public ResponseEntity<?> Signup(@RequestBody String jsoninfo) throws JSONException {
-        System.out.println(jsoninfo);
         JsonElement jsonElement = JsonParser.parseString(jsoninfo);
         JsonObject jsonObject = jsonElement.getAsJsonObject();
         //存放給前端的內容
@@ -136,7 +135,6 @@ public class VoterController {
                 //實際執行 (db開啟autocommit 不用再commit一次)
                 stmt.executeUpdate();
                 int result = stmt.getInt(3);
-                System.out.println(result);
                 //若成功更新(僅會更新一個使用者的狀態，少於或多於皆會失敗)
                 if (result == 1) {
                     //建立response
@@ -154,7 +152,6 @@ public class VoterController {
             //建立response
             response.put("StatusCode", "500");
             response.put("Message", "Database error: " + e.getMessage());
-            System.out.println(response);
             return ResponseEntity.badRequest().body(response.toString());
         }
 
